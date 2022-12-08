@@ -6,13 +6,16 @@ import cors from "cors";
 import session from "express-session";
 import connectStore from "connect-mongo";
 import mongoose from "mongoose";
+import dotenv from "dotenv";
 
+
+dotenv.config({ path: "backend/config/config.env" });
 const app = express();
 const MongoStore = connectStore(session);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
-app.use(cors({origin: allowledDomains, credentials: true}));
+app.use(cors({ credentials: true}));
 app.use(cookieParser());
 app.use(
   session({
@@ -23,13 +26,13 @@ app.use(
     store: new MongoStore({
       mongooseConnection: mongoose.connection,
       collection: "session",
-      ttl: parseInt(SESS_LIFETIME) / 1000,
+      ttl: parseInt(process.env.SESS_LIFETIME) / 1000,
     }),
-    cookie: {
-      sameSite: true,
-      secure: NODE_ENV === "production",
-      maxAge: parseInt(SESS_LIFETIME),
-    },
+     cookie: {
+        sameSite: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: parseInt(process.env.SESS_LIFETIME)
+      }
   })
 );
 

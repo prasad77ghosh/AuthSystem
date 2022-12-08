@@ -1,0 +1,24 @@
+.main_cont {
+  background-color: var(--secondary);
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 80%;
+  max-width: 90%;
+  margin: auto;
+  padding: 0.7rem 0 0.7rem 0;
+}
+
+.logo_cont {
+  color: var(--accent);
+  font-size: 1.5rem;
+}
+
+.links_cont {
+  display: flex;
+  gap: 2rem;
+  font-weight: 500;
+}

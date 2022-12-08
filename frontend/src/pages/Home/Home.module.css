@@ -1,0 +1,37 @@
+.hero_cont {
+  display: flex;
+  width: 80%;
+  margin: 5rem auto;
+  align-items: center;
+  justify-content: center;
+}
+
+.left_cont {
+  flex-basis: 50%;
+}
+
+.right_cont {
+  flex-basis: 50%;
+  width: 100%;
+  height: 100%;
+}
+
+#profile_image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  margin-top: 3rem;
+}
+
+.left_cont > h1 {
+  font-size: 5rem;
+  color: var(--accent);
+}
+
+.left_cont > h2 {
+  font-size: 2rem;
+}
+
+.left_cont > p {
+  margin-top: 1rem;
+}

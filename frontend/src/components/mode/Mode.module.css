@@ -1,0 +1,18 @@
+select {
+  display: inline-block;
+  height: 30px;
+  width: 150px;
+  padding: 2px 10px;
+  outline: none;
+  color: var(--font-color);
+  border: none;
+  background: var(--primary);
+  border-radius: 4px;
+  font-size: 17px;
+  cursor: pointer;
+}
+
+option {
+  font-size: 17px;
+  cursor: pointer;
+}
