@@ -10,4 +10,12 @@ const registerBodyValidation = ({ name, email, password }) => {
   return schema.validate({ name, email, password });
 };
 
-export { registerBodyValidation };
+const loginBodyValidation = ({email, password}) => {
+  const schema = Joi.object({
+    email: Joi.string().email().required().label("Email"),
+    password: passwordComplexity().required().label("Password"),
+  });
+  return schema.validate({ name, email, password });
+}
+
+export { registerBodyValidation, loginBodyValidation };

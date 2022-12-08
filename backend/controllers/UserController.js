@@ -6,6 +6,8 @@ import { catchAsyncError } from "../middlewares/CatchAsyncError.js";
 import { registerBodyValidation } from "../services/JoiValidation.js";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
+import { loginBodyValidation } from "../services/JoiValidation.js";
+import sessionizeUser from "../services/Sessionize.js";
 
 const RegisterUser = catchAsyncError(async (req, res, next) => {
   const { name, email, password, confirmPassword } = req.body;
@@ -49,7 +51,7 @@ const RegisterUser = catchAsyncError(async (req, res, next) => {
 
   const url = `${process.env.BASE_URL}users/${user._id}/verify/${token.token}`;
 
-  const text = `Click on :- \n\n ${url} \n\n to verify your Email . This Link Expire in on hour`;
+  const text = `Click on :- \n\n ${url} \n\n to verify your Email . This Link Expire in one hour`;
 
   // sending verification email
   try {
@@ -88,4 +90,81 @@ const verifyEmail = catchAsyncError(async (req, res, next) => {
   });
 });
 
-export { RegisterUser, verifyEmail };
+// login
+
+const LoginUser = catchAsyncError(async (req, res, next) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return next(new ErrorHandler("All fields are required.."));
+  }
+  const { error } = loginBodyValidation({ email, password });
+  if (error) {
+    return next(new ErrorHandler(error.details[0].message, 400));
+  }
+
+  // find user from using request email
+  const user = await User.findOne({ email });
+  if (!user) {
+    return next(new ErrorHandler("Invalid email and password !", 401));
+  }
+
+  // compare request password to hash password
+  const isValidPassword = await bcrypt.compare(password, user.password);
+  if (!isValidPassword) {
+    return next(new ErrorHandler("Invalid email and password !", 401));
+  }
+
+  // if user is not verified then check it
+  if (!user.verified) {
+    let token = await Token.findOne({ userId: user._id });
+    if (!token) {
+      token = await new Token({
+        userId: user._id,
+        token: crypto.randomBytes(32).toString("hex"),
+      }).save();
+
+      const url = `${process.env.BASE_URL}users/${user._id}/verify/${token.token}`;
+
+      const text = `Click on :- \n\n ${url} \n\n to verify your Email . This Link Expire in one hour`;
+
+      // sending verification email
+      try {
+        await sendEmail(user.email, "Verify Email", text);
+        res.status(200).json({
+          success: true,
+          message: `Email send successfully to ${user.email} for verification`,
+        });
+      } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+      }
+    }
+  }
+
+  const sessionUser = sessionizeUser(user);
+  req.session.user = sessionUser;
+  console.log(req.session.user);
+  res.status(200).json({
+    success: true,
+    message: "LoggedIn Successfully..",
+  });
+});
+
+const LogoutUser = catchAsyncError(async (req, res, next) => {
+  const user = req.session.user;
+  if (!user) {
+    return next(new ErrorHandler("No User Found !", 401));
+  }
+  req.session.destroy((err) => {
+    if (err) {
+      return next(new ErrorHandler(err, 400));
+    }
+    res.clearCookie(process.env.SESS_NAME);
+  });
+
+  res.status(200).status({
+    success: true,
+    message: "Logout Successfully..",
+  });
+});
+
+export { RegisterUser, verifyEmail, LoginUser, LogoutUser };
