@@ -147,6 +147,74 @@ exports.LoginUser = catchAsyncError(async (req, res, next) => {
   });
 });
 
+// forgot password
+
+exports.forgotPassword = catchAsyncError(async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return next(new ErrorHandler("User not found", 404));
+  }
+
+  const resetToken = user.getPasswordResetToken();
+
+  // ithis methods created after creating user so we have to save user to store resetPasswordToken and resetPasswordExpire indide uuserSchma
+
+  await user.save({ validateBeforeSave: false });
+
+  const resetPasswordUrl = `${process.env.BASE_URL}/user/password/reset/${resetToken}`;
+  const message = `Your reset password token is :- \n\n ${resetPasswordUrl} \n\n if you have not request this email then please ignore it`;
+
+  try {
+    await sendEmail(user.email, "Verify Password", message);
+    res.status(200).json({
+      success: true,
+      message: `Email send ${user.email} successfully`,
+    });
+  } catch (error) {
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save({ validateBeforeSave: false });
+    return next(new ErrorHandler(error.message, 500));
+  }
+});
+
+// password reset
+exports.resetPassword = catchAsyncError(async (req, res, next) => {
+  // creating resetPassworToken to match resetPasswordToken present inside database
+  const resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+
+  const user = await User.findOne({
+    resetPasswordToken,
+    resetPasswordExpire: { $gt: Date.now() }, // should be
+  });
+
+  if (!user) {
+    return next(
+      new ErrorHandler("Reset password token is Invald or hasbeen expired", 400)
+    );
+  }
+
+  if (req.body.password !== req.body.confirmPassword) {
+    return next(new ErrorHandler("Password does not matched", 400));
+  }
+
+  const salt = await bcrypt.genSalt(Number(process.env.SALT));
+  const hashPassword = await bcrypt.hash(req.body.password, salt);
+  user.password = hashPassword;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
+
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Your password reset successfully..",
+  });
+});
+
 exports.LogoutUser = catchAsyncError(async (req, res, next) => {
   req.session.destroy((err) => {
     //delete session data from store, using sessionID in cookie

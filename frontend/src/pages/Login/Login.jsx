@@ -60,10 +60,14 @@ const Login = () => {
                 required
                 className={styles.input}
               />
+
               <button type="submit" className={styles.green_btn}>
                 {loading ? "Loading.." : "SignIn"}
               </button>
             </form>
+            <Link to = "/password/forgot">
+              <p className={styles.f_link}>Forgot Password</p>
+            </Link>
           </div>
           <div className={styles.right}>
             <h1>New Here ?</h1>

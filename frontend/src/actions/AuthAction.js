@@ -131,3 +131,63 @@ export const userRegister = (name, email, password, confirmPassword) => async (d
     };
 
 
+    //forgot password
+export const passwordForgot = (email) => async (dispatch) => {
+  const url = "auth_api/v1/password/forgot";
+  try {
+    dispatch({
+      type: "forgotPasswordRequest",
+    });
+
+    const { data } = await http.post(url, { email });
+    dispatch({
+      type: "forgotPasswordSuccess",
+      payload: data.message,
+    });
+  } catch (error) {
+    dispatch({
+      type: "forgotPasswordFail",
+      payload:
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString(),
+    });
+  }
+};
+
+
+//reset password
+export const passwordReset =
+  (token, password, confirmPassword) => async (dispatch) => {
+    const url = `auth_api/v1/user/password/reset/${token}`;
+
+    try {
+      dispatch({
+        type: "resetPasswordRequest",
+      });
+
+      const { data } = await http.put(url, {
+        password,
+        confirmPassword,
+      });
+      dispatch({
+        type: "resetPasswordSuccess",
+        payload: data.success,
+      });
+    } catch (error) {
+      dispatch({
+        type: "resetPasswordFail",
+        payload:
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString(),
+      });
+    }
+  };
+
+
+

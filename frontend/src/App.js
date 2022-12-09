@@ -13,6 +13,8 @@ import VerifyEmail from "./pages/VerifyEmail/VerifyEmail";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { checkAuth } from "./actions/AuthAction";
+import Forgot from "./components/ForgotPassword/Forgot";
+import ResetPassword from "./components/ResetPassword/ResetPassword";
 
 function App() {
   const dispatch = useDispatch();
@@ -29,6 +31,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/users/:id/verify/:token" element={<VerifyEmail />} />
+          <Route path="/password/forgot" element={<Forgot />} />
+          <Route path="/user/password/reset/:token" element={<ResetPassword />} />
           <Route element={<ProtrctedRoute />}>
             <Route path="/about" element={<About />} />
             <Route path="/dashboard" element={<DashBoard />} />
