@@ -13,7 +13,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, isAuthenticated, error } = useSelector(
-    (state) => state.LoginReducer
+    (state) => state.AuthReducer
   );
 
   const handleSubmit = (e) => {

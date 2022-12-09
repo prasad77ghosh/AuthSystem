@@ -5,33 +5,15 @@ import Mode from "../mode/Mode";
 import { useDispatch, useSelector } from "react-redux";
 import { LogoutUser } from "../../actions/AuthAction";
 import { toast } from "react-toastify";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const { loading, data, error } = useSelector((state) => state.LogoutReducer);
-  const { isAuthenticated } = useSelector((state) => state.AuthCheckReducer);
-  console.log(isAuthenticated)
-  const navigate = useNavigate();
+  const { isAuthenticated } = useSelector((state) => state.AuthReducer);
 
-  const logoutUser = () => {
+  const logoutAction = () => {
     dispatch(LogoutUser());
+    toast.success("Logged out successfully...");
   };
-
-  useEffect(() => {
-    if (error) {
-      toast.error(error);
-
-      dispatch({
-        type: "clearError",
-      });
-    }
-    if (data.msg) {
-      toast.success("logout successfully..");
-      navigate("/");
-    }
-  }, [error, toast, dispatch, data]);
 
   return (
     <>
@@ -56,18 +38,15 @@ const Navbar = () => {
           </ul>
 
           <div className={styles.mod_cont}>
-            {isAuthenticated && (
+            {isAuthenticated ? (
               <>
-                <p className={styles.logout} onClick={logoutUser}>
-                  {/* {loading ? "Loading.." : "Logout"} */}
+                <p className={styles.logout} onClick={logoutAction}>
                   Logout
                 </p>
               </>
-            )}
-
-            {!isAuthenticated && (
+            ) : (
               <>
-                <Link to = "/login">
+                <Link to="/login">
                   <p className={styles.login}>Login</p>
                 </Link>
               </>

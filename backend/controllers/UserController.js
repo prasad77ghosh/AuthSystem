@@ -161,7 +161,7 @@ exports.IsAuthUser = catchAsyncError(async (req, res, next) => {
   if (sessUser) {
     res.status(200).json({
       msg: " Authenticated Successfully",
-      sessUser,
+      user: sessUser,
       auth: true,
     });
   } else {

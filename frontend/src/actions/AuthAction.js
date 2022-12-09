@@ -113,18 +113,13 @@ export const userRegister = (name, email, password, confirmPassword) => async (d
     export const LogoutUser = () => async (dispatch) => {
       const url = `auth_api/v1/logout`;
       try {
+           await http.delete(url);
         dispatch({
-          type: "logoutRequest",
-        });
-
-        const { data } = await http.delete(url);
-        dispatch({
-          type: "logoutSuccess",
-          payload: data,
+          type: "logoutUserSuccess",
         });
       } catch (error) {
         dispatch({
-          type: "logoutFailure",
+          type: "logoutUserFailure",
           payload:
             (error.response &&
               error.response.data &&
