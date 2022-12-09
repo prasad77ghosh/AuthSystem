@@ -5,5 +5,5 @@ class ErrorHandler extends Error {
   }
 }
 
-export default ErrorHandler;
+module.exports = ErrorHandler;
 

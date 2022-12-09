@@ -2,6 +2,7 @@ import http from "../http";
 
 // login call
 export const userLogin = (email, password) => async (dispatch) => {
+  console.log(email, password);
   const url = "/auth_api/v1/login";
   try {
     dispatch({
@@ -60,7 +61,6 @@ export const userRegister = (name, email, password, confirmPassword) => async (d
 
 
   export const verifyUser = (id,token) => async (dispatch) => {
-    console.log(id, token);
       const url = `auth_api/v1/users/${id}/verify/${token}`;
       try {
         dispatch({
@@ -84,4 +84,56 @@ export const userRegister = (name, email, password, confirmPassword) => async (d
         });
       }
     };
+
+
+  export const checkAuth = () => async (dispatch) => {
+    const url = `auth_api/v1/authchecker`;
+    try {
+      dispatch({
+        type: "authCheckRequest",
+      });
+
+      const { data } = await http.get(url);
+      dispatch({
+        type: "authCheckSuccess",
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: "authCheckFailure",
+        payload:
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString(),
+      });
+    }
+  };
+
+    export const LogoutUser = () => async (dispatch) => {
+      const url = `auth_api/v1/logout`;
+      try {
+        dispatch({
+          type: "logoutRequest",
+        });
+
+        const { data } = await http.delete(url);
+        dispatch({
+          type: "logoutSuccess",
+          payload: data,
+        });
+      } catch (error) {
+        dispatch({
+          type: "logoutFailure",
+          payload:
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString(),
+        });
+      }
+    };
+
 

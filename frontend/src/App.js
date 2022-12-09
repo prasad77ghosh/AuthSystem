@@ -1,5 +1,5 @@
 import "./App.css";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./components/navbar/Navbar";
 import Home from "./pages/Home/Home";
@@ -10,8 +10,17 @@ import Register from "./pages/Register/Register";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProtrctedRoute from "./protectedRoute/ProtectedRoute";
 import VerifyEmail from "./pages/VerifyEmail/VerifyEmail";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { checkAuth } from "./actions/AuthAction";
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
+
   return (
     <>
       <BrowserRouter>

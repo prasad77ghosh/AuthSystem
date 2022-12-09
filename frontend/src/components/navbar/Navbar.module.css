@@ -15,7 +15,7 @@ nav {
 .logo_cont {
   font-size: 1.5rem;
 }
-.logo_cont > h1{
+.logo_cont > h1 {
   color: var(--accent);
 }
 
@@ -23,4 +23,18 @@ nav {
   display: flex;
   gap: 2rem;
   font-weight: 500;
+}
+
+.mod_cont {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  cursor: pointer;
+}
+
+.logout {
+  padding: 10px;
+}
+.login {
+  padding: 10px;
 }

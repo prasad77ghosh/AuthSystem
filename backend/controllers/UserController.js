@@ -1,15 +1,14 @@
-import { User } from "../models/User.js";
-import { Token } from "../models/token.js";
-import ErrorHandler from "../services/ErrorHandler.js";
-import sendEmail from "../services/SendMail.js";
-import { catchAsyncError } from "../middlewares/CatchAsyncError.js";
-import { registerBodyValidation } from "../services/JoiValidation.js";
-import bcrypt from "bcrypt";
-import crypto from "crypto";
-import { loginBodyValidation } from "../services/JoiValidation.js";
-import sessionizeUser from "../services/Sessionize.js";
+const User = require("../models/User");
+const Token = require("../models/Token");
+const ErrorHandler = require("../services/ErrorHandler");
+const sendEmail = require("../services/SendMail");
+const catchAsyncError = require("../middlewares/CatchAsyncError");
+const {registerBodyValidation} = require("../services/JoiValidation")
+const bcrypt = require("bcrypt");
+const crypto = require("crypto");
+const {loginBodyValidation} = require("../services/JoiValidation");
 
-const RegisterUser = catchAsyncError(async (req, res, next) => {
+exports.RegisterUser = catchAsyncError(async (req, res, next) => {
   const { name, email, password, confirmPassword } = req.body;
 
   if (!name || !email || !password || !confirmPassword) {
@@ -66,7 +65,7 @@ const RegisterUser = catchAsyncError(async (req, res, next) => {
 });
 
 // Email verification
-const verifyEmail = catchAsyncError(async (req, res, next) => {
+exports.verifyEmail = catchAsyncError(async (req, res, next) => {
   const user = await User.findOne({ _id: req.params.id });
   if (!user) {
     return next(new ErrorHandler("Invalid Link", 500));
@@ -92,7 +91,7 @@ const verifyEmail = catchAsyncError(async (req, res, next) => {
 
 // login
 
-const LoginUser = catchAsyncError(async (req, res, next) => {
+exports.LoginUser = catchAsyncError(async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
     return next(new ErrorHandler("All fields are required.."));
@@ -107,7 +106,6 @@ const LoginUser = catchAsyncError(async (req, res, next) => {
   if (!user) {
     return next(new ErrorHandler("Invalid email and password !", 401));
   }
-
   // compare request password to hash password
   const isValidPassword = await bcrypt.compare(password, user.password);
   if (!isValidPassword) {
@@ -140,32 +138,31 @@ const LoginUser = catchAsyncError(async (req, res, next) => {
     }
   }
 
-  const sessionUser = sessionizeUser(user);
-  req.session.user = sessionUser;
-  console.log(req.session.user);
+  const sessUser = { id: user._id, name: user.name, email: user.email };
+  req.session.user = sessUser;
   res.status(200).json({
-    success: true,
-    user: user,
+    auth: true,
+    user: sessUser,
     message: "LoggedIn Successfully..",
   });
 });
 
-const LogoutUser = catchAsyncError(async (req, res, next) => {
-  const user = req.session.user;
-  if (!user) {
-    return next(new ErrorHandler("No User Found !", 401));
-  }
+exports.LogoutUser = catchAsyncError(async (req, res, next) => {
   req.session.destroy((err) => {
-    if (err) {
-      return next(new ErrorHandler(err, 400));
-    }
-    res.clearCookie(process.env.SESS_NAME);
-  });
-
-  res.status(200).status({
-    success: true,
-    message: "Logout Successfully..",
+    //delete session data from store, using sessionID in cookie
+    if (err) throw err;
+    res.clearCookie(process.env.SESS_NAME); // clears cookie containing expired sessionID
+    res.json({ msg: "Logged out successfully", auth: false });
   });
 });
 
-export { RegisterUser, verifyEmail, LoginUser, LogoutUser };
+exports.IsAuthUser = catchAsyncError(async (req, res, next) => {
+  const sessUser = req.session.user;
+  if (sessUser) {
+    res.status(200).json({
+      msg: " Authenticated Successfully",
+      sessUser,
+      auth: true,
+    });
+  }
+});

@@ -1,10 +1,10 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 };
 
-const ConnectDB = () => {
+const connectDB = () => {
   mongoose
     .connect(process.env.DB_URL, options)
     .then((data) => {
@@ -15,4 +15,4 @@ const ConnectDB = () => {
     });
 };
 
-export default ConnectDB;
+module.exports = connectDB;

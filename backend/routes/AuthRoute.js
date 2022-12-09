@@ -1,11 +1,19 @@
-import express from "express";
-import { RegisterUser, verifyEmail, LoginUser, LogoutUser } from "../controllers/UserController.js";
+const express = require("express");
+const authChecker = require("../middlewares/AuthChecker");
+const {
+  RegisterUser,
+  verifyEmail,
+  LoginUser,
+  LogoutUser,
+  IsAuthUser,
+} = require("../controllers/UserController");
 
 const AuthRouter = express.Router();
 
 AuthRouter.route("/register").post(RegisterUser);
 AuthRouter.route("/users/:id/verify/:token").get(verifyEmail);
 AuthRouter.route("/login").post(LoginUser);
-AuthRouter.route("/logout").post(LogoutUser);
+AuthRouter.route("/logout").delete(authChecker, LogoutUser);
+AuthRouter.route("/authchecker").get(authChecker, IsAuthUser);
 
-export default AuthRouter;
+module.exports = AuthRouter;

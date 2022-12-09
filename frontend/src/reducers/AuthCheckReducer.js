@@ -7,23 +7,7 @@ const initialState = {
   error: null,
 };
 
-const LoginReducer = createReducer(initialState, {
-  loginUserRequest: (state) => {
-    state.loading = true;
-    state.isAuthenticated = false;
-  },
-  loginUserSuccess: (state, action) => {
-    state.loading = false;
-    state.data = action.payload;
-    state.isAuthenticated = true;
-  },
-  loginUserFailure: (state, action) => {
-    state.loading = false;
-    state.data = null;
-    state.isAuthenticated = false;
-    state.error = action.payload;
-  },
-
+const AuthCheckReducer = createReducer(initialState, {
   authCheckRequest: (state) => {
     state.loading = true;
     state.isAuthenticated = false;
@@ -39,12 +23,9 @@ const LoginReducer = createReducer(initialState, {
     state.isAuthenticated = false;
     state.error = action.payload;
   },
-
   clearError: (state) => {
     state.error = null;
   },
 });
 
-
-export default LoginReducer;
-
+export default AuthCheckReducer;

@@ -18,8 +18,6 @@ const Register = () => {
     (state) => state.RegisterReducer
   );
 
-  const { success, message } = data;
-
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(userRegister(name, email, password, confirmPassword));
@@ -34,7 +32,7 @@ const Register = () => {
       });
     }
     if (isEmailSended) {
-      toast.success(message);
+      toast.success(data.message);
     }
   }, [error, toast, dispatch, isEmailSended]);
 

@@ -1,4 +1,4 @@
-import ErrorHandler from "../services/ErrorHandler.js";
+const ErrorHandler = require("../services/ErrorHandler");
 
 const errorMiddleware = (err, req, res, next) => {
   err.message = err.message || "Internal Server Error";
@@ -34,5 +34,4 @@ const errorMiddleware = (err, req, res, next) => {
   });
 };
 
-
-export default errorMiddleware;
+module.exports = errorMiddleware;

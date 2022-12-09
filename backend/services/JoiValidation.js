@@ -1,5 +1,5 @@
-import Joi from "joi";
-import passwordComplexity from "joi-password-complexity";
+const Joi = require("joi");
+const passwordComplexity = require("joi-password-complexity");
 
 const registerBodyValidation = ({ name, email, password }) => {
   const schema = Joi.object({
@@ -10,12 +10,13 @@ const registerBodyValidation = ({ name, email, password }) => {
   return schema.validate({ name, email, password });
 };
 
-const loginBodyValidation = ({email, password}) => {
+const loginBodyValidation = ({ email, password }) => {
   const schema = Joi.object({
     email: Joi.string().email().required().label("Email"),
     password: passwordComplexity().required().label("Password"),
   });
-  return schema.validate({ name, email, password });
-}
+  return schema.validate({ email, password });
+};
 
-export { registerBodyValidation, loginBodyValidation };
+
+module.exports = { registerBodyValidation, loginBodyValidation };
