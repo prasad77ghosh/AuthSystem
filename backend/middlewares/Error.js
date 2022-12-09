@@ -15,6 +15,11 @@ const errorMiddleware = (err, req, res, next) => {
     const message = `Duplicate ${Object.keys(err.keyValue)} Entered`;
     err = new ErrorHandler(message, 400);
   }
+  if (err.statusCode === 429) {
+    const message =
+      "Too many requests from this IP Please try again after 15 minutes";
+    err = new ErrorHandler(message, 400);
+  }
 
   // Wrong JWT error
   if (err.name === "JsonWebTokenError") {

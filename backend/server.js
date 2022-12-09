@@ -7,6 +7,7 @@ const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
 const dotenv = require("dotenv");
 const connectDB = require("./config/database");
+const compression = require("compression");
 
 dotenv.config({ path: "backend/config/config.env" });
 
@@ -23,11 +24,13 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(compression());
+
 
 // setting up connect-mongodb-session store
 const mongoDBstore = new MongoDBStore({
-    uri: process.env.DB_URL,
-    collection: "mySessions"
+  uri: process.env.DB_URL,
+  collection: "mySessions",
 });
 
 mongoDBstore.on("connected", () => console.log("mongoDBstore Connected"));
@@ -49,17 +52,6 @@ app.use(
   })
 );
 
-// app.use(function (req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept,Authorization"
-//   );
-//   res.header("Access-Control-Allow-Methods", "GET,PUT,PATCH,POST,DELETE");
-//   next();
-// });
-
-
 //handling uncought expection
 process.on("uncaughtException", (error) => {
   console.log(`Error: ${error.message}`);
@@ -67,16 +59,13 @@ process.on("uncaughtException", (error) => {
   process.exit(1);
 });
 
-
 const PORT = process.env.PORT || 3300;
-
 
 app.use("/auth_api/v1", AuthRouter);
 
 app.listen(PORT, () => {
   console.log(`Server listen on PORT :- ${PORT}`);
 });
-
 
 app.use(errorMiddleware);
 

@@ -3,10 +3,10 @@ const Token = require("../models/Token");
 const ErrorHandler = require("../services/ErrorHandler");
 const sendEmail = require("../services/SendMail");
 const catchAsyncError = require("../middlewares/CatchAsyncError");
-const {registerBodyValidation} = require("../services/JoiValidation")
+const { registerBodyValidation } = require("../services/JoiValidation");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
-const {loginBodyValidation} = require("../services/JoiValidation");
+const { loginBodyValidation } = require("../services/JoiValidation");
 
 exports.RegisterUser = catchAsyncError(async (req, res, next) => {
   const { name, email, password, confirmPassword } = req.body;
@@ -164,5 +164,7 @@ exports.IsAuthUser = catchAsyncError(async (req, res, next) => {
       sessUser,
       auth: true,
     });
+  } else {
+    return next(new ErrorHandler("You are not Logged In", 400));
   }
 });

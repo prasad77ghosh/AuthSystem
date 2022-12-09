@@ -12,6 +12,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const { loading, data, error } = useSelector((state) => state.LogoutReducer);
   const { isAuthenticated } = useSelector((state) => state.AuthCheckReducer);
+  console.log(isAuthenticated)
   const navigate = useNavigate();
 
   const logoutUser = () => {
@@ -66,7 +67,7 @@ const Navbar = () => {
 
             {!isAuthenticated && (
               <>
-                <Link>
+                <Link to = "/login">
                   <p className={styles.login}>Login</p>
                 </Link>
               </>

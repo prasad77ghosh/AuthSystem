@@ -19,9 +19,10 @@ export const userLogin = (email, password) => async (dispatch) => {
       payload:
         (error.response &&
           error.response.data &&
+          error.response.data.message &&
           error.response.data.message) ||
         error.message ||
-        error.toString(),
+        error.toString()
     });
   }
 };
@@ -104,9 +105,7 @@ export const userRegister = (name, email, password, confirmPassword) => async (d
         payload:
           (error.response &&
             error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString(),
+            error.response.data.message) 
       });
     }
   };
