@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./Login.module.css";
+import {Link} from "react-router-dom"
 
 const Login = () => {
   return (
@@ -37,9 +38,11 @@ const Login = () => {
           </div>
           <div className={styles.right}>
             <h1>New Here ?</h1>
-            <button type="button" className={styles.white_btn}>
-              Sing Up
-            </button>
+            <Link to = "/register">
+              <button type="button" className={styles.white_btn}>
+                Sing Up
+              </button>
+            </Link>
           </div>
         </div>
       </div>

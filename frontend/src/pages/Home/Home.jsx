@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from "./Home.module.css"
-import nature from "../../../images/nature.jpg"
+import nature from "../../images/nature.jpg"
 
 const Home = () => {
   return (

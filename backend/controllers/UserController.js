@@ -49,7 +49,7 @@ const RegisterUser = catchAsyncError(async (req, res, next) => {
     token: crypto.randomBytes(32).toString("hex"),
   }).save();
 
-  const url = `${process.env.BASE_URL}users/${user._id}/verify/${token.token}`;
+  const url = `${process.env.BASE_URL}/users/${user._id}/verify/${token.token}`;
 
   const text = `Click on :- \n\n ${url} \n\n to verify your Email . This Link Expire in one hour`;
 
@@ -123,7 +123,7 @@ const LoginUser = catchAsyncError(async (req, res, next) => {
         token: crypto.randomBytes(32).toString("hex"),
       }).save();
 
-      const url = `${process.env.BASE_URL}users/${user._id}/verify/${token.token}`;
+      const url = `${process.env.BASE_URL}/users/${user._id}/verify/${token.token}`;
 
       const text = `Click on :- \n\n ${url} \n\n to verify your Email . This Link Expire in one hour`;
 
@@ -145,6 +145,7 @@ const LoginUser = catchAsyncError(async (req, res, next) => {
   console.log(req.session.user);
   res.status(200).json({
     success: true,
+    user: user,
     message: "LoggedIn Successfully..",
   });
 });

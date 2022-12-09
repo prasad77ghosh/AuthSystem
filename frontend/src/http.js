@@ -1,10 +1,10 @@
-import axios from axios;
+import axios from "axios";
 
 export default axios.create({
-  baseURL: "http:",
+  baseURL: process.env.REACT_APP_BACKEND_URL,
   withCredentials: true,
   headers: {
-    "Content-Type": "application/json" || "multipart/form-data",
+    "content-type": "application/json",
     Accept: "application/json",
   },
 });

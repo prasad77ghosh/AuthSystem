@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Navbar.module.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import Mode from "../mode/Mode";
 
 const Navbar = () => {
@@ -9,7 +9,9 @@ const Navbar = () => {
       <div className={styles.main_cont}>
         <nav>
           <div className={styles.logo_cont}>
-            <h1>Green</h1>
+            <Link to = "/">
+              <h1>Green</h1>
+            </Link>
           </div>
 
           <ul className={styles.links_cont}>

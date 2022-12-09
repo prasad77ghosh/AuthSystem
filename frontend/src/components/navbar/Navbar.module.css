@@ -13,8 +13,10 @@ nav {
 }
 
 .logo_cont {
-  color: var(--accent);
   font-size: 1.5rem;
+}
+.logo_cont > h1{
+  color: var(--accent);
 }
 
 .links_cont {

@@ -8,14 +8,18 @@ import connectStore from "connect-mongo";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
-
 dotenv.config({ path: "backend/config/config.env" });
 const app = express();
 const MongoStore = connectStore(session);
 
+app.use(
+  cors({
+    credentials: true,
+    origin: true,
+  })
+);
 app.use(express.json());
-app.use(express.urlencoded({ extended: true}));
-app.use(cors({ credentials: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   session({
@@ -28,11 +32,11 @@ app.use(
       collection: "session",
       ttl: parseInt(process.env.SESS_LIFETIME) / 1000,
     }),
-     cookie: {
-        sameSite: true,
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: parseInt(process.env.SESS_LIFETIME)
-      }
+    cookie: {
+      sameSite: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: parseInt(process.env.SESS_LIFETIME),
+    },
   })
 );
 
