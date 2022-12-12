@@ -6,10 +6,22 @@ const loginAccoutLimiter = rateLimit({
   statusCode: 429,
   message: {
     error:
-      "Too many accounts created from this IP, please try again after a few minutes.",
+      "Too many accounts created from this IP, please try again after 15 minutes.",
   },
   standardHeaders: true,
   legacyHeaders: false,
 });
 
-module.exports = loginAccoutLimiter;
+const registerRateLimiter = rateLimit({
+  windowMs: 2 * 60 * 1000,
+  max: 2,
+  statusCode: 429,
+  message: {
+    error:
+      "Too many accounts created from this IP, please try again after  2 minutes.",
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+module.exports = { loginAccoutLimiter, registerRateLimiter };

@@ -1,6 +1,6 @@
 const express = require("express");
 const authChecker = require("../middlewares/AuthChecker");
-const loginAccoutLimiter = require("../middlewares/RateLimit");
+const {loginAccoutLimiter, registerRateLimiter} = require("../middlewares/RateLimit");
 const {
   RegisterUser,
   verifyEmail,
@@ -13,8 +13,8 @@ const {
 
 const AuthRouter = express.Router();
 
-AuthRouter.route("/register").post(RegisterUser);
-AuthRouter.route("/password/forgot").post(forgotPassword);
+AuthRouter.route("/register").post(registerRateLimiter,RegisterUser);
+AuthRouter.route("/password/forgot").post(registerRateLimiter,forgotPassword);
 AuthRouter.route("/user/password/reset/:token").put(resetPassword);
 AuthRouter.route("/users/:id/verify/:token").get(verifyEmail);
 AuthRouter.route("/login").post(loginAccoutLimiter, LoginUser);
