@@ -2,7 +2,7 @@ const rateLimit = require("express-rate-limit");
 
 const loginAccoutLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 5,
+  max: 3,
   statusCode: 429,
   message: {
     error:
